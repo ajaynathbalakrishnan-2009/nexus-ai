@@ -67,8 +67,8 @@ function App() {
   const [displayName, setDisplayName] = useState(() => localStorage.getItem('nexus-display-name') ?? '')
   const [signInError, setSignInError] = useState('')
   const googleButtonRef = useRef<HTMLDivElement>(null)
-  const [isRunning, setIsRunning] = useState(true)
-  const [elapsed, setElapsed] = useState(44 * 60 + 12)
+  const [isRunning, setIsRunning] = useState(() => localStorage.getItem('nexus-session-running') === 'true')
+  const [elapsed, setElapsed] = useState(() => Number(localStorage.getItem('nexus-session-elapsed') ?? 0))
   const [interruptions, setInterruptions] = useState(2)
   const [counselingOpen, setCounselingOpen] = useState(false)
   const [studyModeOpen, setStudyModeOpen] = useState(false)
@@ -98,6 +98,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem('study-guard-events', JSON.stringify(events))
   }, [events])
+
+  useEffect(() => {
+    localStorage.setItem('nexus-session-elapsed', String(elapsed))
+    localStorage.setItem('nexus-session-running', String(isRunning))
+  }, [elapsed, isRunning])
 
   useEffect(() => {
     localStorage.setItem('nexus-college', college)
@@ -190,6 +195,16 @@ function App() {
     addEvent({ title: 'Counseling feedback recorded', detail: helpful ? 'The reset was helpful' : 'The agent will adjust its next prompt', tone: helpful ? 'mint' : 'amber' })
   }
 
+  const resetSession = () => {
+    setIsRunning(false)
+    setElapsed(0)
+    setInterruptions(0)
+    setLocked(false)
+    setAgentEvents([])
+    setAgentDecision(decideInterruption([]))
+    addEvent({ title: 'Session reset', detail: 'Ready for a new focus session', tone: 'mint' })
+  }
+
   const youtubeSearchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(`${topic || subject} ${subject} ${effectiveDepartment} college ${language} lecture`)}`
   const practiceQuestion = `Which principle is most important when studying ${topic || subject} in ${effectiveDepartment}?`
   const practiceOptions = ['Define the concept and explain why it matters', 'Memorize the title only', 'Skip examples and practice', 'Study without checking understanding']
@@ -261,7 +276,7 @@ function App() {
       <section className="welcome-row">
         <div><p className="eyebrow">Wednesday, September 10</p><h1>Good morning, {userName}.</h1><p className="subtitle">Your attention is a resource. Let&apos;s spend it deliberately.</p></div>
         <div className="profile-controls"><label className="profile-control">Profile<select value={studentProfile} onChange={(event) => setStudentProfile(event.target.value)} aria-label="Study profile"><option>College student</option><option>High school student</option><option>Professional learner</option><option>Researcher</option></select></label><label className="profile-control">College<input value={college} onChange={(event) => setCollege(event.target.value)} placeholder="Your college" aria-label="College name" /></label><label className="profile-control">Department<select value={department} onChange={(event) => setDepartment(event.target.value)} aria-label="Department">{departments.map((item) => <option key={item}>{item}</option>)}</select></label>{department === 'Other / enter my department' && <label className="profile-control">Custom department<input value={customDepartment} onChange={(event) => setCustomDepartment(event.target.value)} placeholder="Enter department" aria-label="Custom department" /></label>}<label className="profile-control">Semester<select value={semester} onChange={(event) => setSemester(event.target.value)} aria-label="Semester">{semesters.map((item) => <option key={item}>{item}</option>)}</select></label><label className="profile-control">Topic<input value={topic} onChange={(event) => setTopic(event.target.value)} placeholder="What are you studying?" aria-label="Study topic" /></label></div>
-        <button className="quiet-button" onClick={() => setIsRunning((value) => !value)}>{isRunning ? 'Pause session' : 'Resume session'} <span>↗</span></button>
+        <div className="session-actions"><button className="quiet-button" onClick={() => setIsRunning((value) => !value)}>{isRunning ? 'Pause session' : elapsed > 0 ? 'Resume session' : 'Start session'} <span>↗</span></button><button className="reset-button" onClick={resetSession}>Reset</button></div>
       </section>
 
       <section className="hero-grid">
