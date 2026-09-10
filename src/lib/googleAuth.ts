@@ -13,6 +13,7 @@ type GoogleButtonOptions = { theme: string; size: string; width: number; text: s
 type GoogleId = {
   initialize: (options: { client_id: string; callback: (response: GoogleCredentialResponse) => void }) => void
   renderButton: (element: HTMLElement, options: GoogleButtonOptions) => void
+  prompt: () => void
 }
 
 declare global {
@@ -78,6 +79,7 @@ export async function mountGoogleButton(
       },
     })
     googleId.renderButton(element, { theme: 'outline', size: 'large', width: 360, text: 'signin_with' })
+    googleId.prompt()
   } catch (error) {
     onError(error instanceof Error ? error.message : 'Google sign-in failed.')
   }
