@@ -9,6 +9,7 @@ button { cursor: pointer; }
 .google-signin-button { display: flex; align-items: center; justify-content: center; gap: 10px; width: 100%; min-height: 46px; border: 1px solid #c8d0cc; border-radius: 7px; background: #fff; color: #26312d; font-weight: 800; }.google-signin-button:hover { border-color: var(--mint-deep); box-shadow: 0 6px 16px #1b463112; }.google-g { color: #4285f4; font: 800 20px Arial, sans-serif; }
 .signin-divider { display: flex; align-items: center; gap: 10px; color: var(--muted); font: 10px 'DM Mono', monospace; }.signin-divider::before, .signin-divider::after { content: ''; height: 1px; flex: 1; background: var(--line); }.guest-button { min-height: 42px; border: 0; background: transparent; color: var(--mint-deep); font-size: 12px; font-weight: 800; }.guest-button:hover { text-decoration: underline; }
 .app-shell { max-width: 1280px; margin: 0 auto; padding: 0 44px 24px; }
+.tamil-language-button { position: fixed; right: 24px; bottom: 24px; z-index: 5; padding: 9px 13px; border: 1px solid var(--line); border-radius: 99px; background: var(--white); color: var(--mint-deep); font-size: 12px; font-weight: 800; box-shadow: 0 8px 20px #244c3718; }.tamil-language-button:hover { background: #e4f4e9; }
 .topbar { height: 84px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); }
 .brand, .topbar-actions, .agent-heading, .panel-kicker, .focus-footer, .bottom-status, .privacy-chip { display: flex; align-items: center; }
 .brand { gap: 12px; font-weight: 800; letter-spacing: -.03em; }

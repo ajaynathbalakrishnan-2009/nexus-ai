@@ -252,6 +252,7 @@ function App() {
 
   return (
     <main className="app-shell">
+      <button className="tamil-language-button" type="button" onClick={() => setLanguage('Tamil')} aria-label="Use Tamil recommendations">தமிழ்</button>
       <header className="topbar">
         <div className="brand"><span className="brand-mark">NX</span><span>Nexus AI</span></div>
         <div className="topbar-actions"><span className="privacy-chip"><span className="status-dot" /> Local-first</span><button className="icon-button" aria-label="Open settings">⚙</button><button className="avatar" aria-label={`Sign out ${userName}`} title={`Sign out ${userName}`} onClick={signOut}>{userInitials}</button></div>
