@@ -32,7 +32,7 @@ export type MemoryHealth = {
   edges: number
 }
 
-type MemorySnapshot = {
+export type MemorySnapshot = {
   vectors: VectorMemory[]
   nodes: GraphNode[]
   edges: GraphEdge[]
@@ -71,12 +71,12 @@ function similarity(left: number[], right: number[]): number {
 }
 
 export class StudyMemoryDatabase {
-  private snapshot: MemorySnapshot
+  private state: MemorySnapshot
   private readonly storage: Storage | null
 
   constructor() {
     this.storage = safeStorage()
-    this.snapshot = this.read()
+    this.state = this.read()
   }
 
   remember(id: string, text: string, metadata: MemoryMetadata = {}): VectorMemory {
@@ -87,13 +87,13 @@ export class StudyMemoryDatabase {
       metadata,
       createdAt: new Date().toISOString(),
     }
-    this.snapshot.vectors = [memory, ...this.snapshot.vectors.filter((item) => item.id !== id)]
+    this.state.vectors = [memory, ...this.state.vectors.filter((item) => item.id !== id)]
     this.persist()
     return memory
   }
 
   addNode(node: GraphNode): GraphNode {
-    this.snapshot.nodes = [node, ...this.snapshot.nodes.filter((item) => item.id !== node.id)]
+    this.state.nodes = [node, ...this.state.nodes.filter((item) => item.id !== node.id)]
     this.persist()
     return node
   }
@@ -101,14 +101,14 @@ export class StudyMemoryDatabase {
   connect(from: string, to: string, relation: string, weight = 1): GraphEdge {
     const id = `${from}:${relation}:${to}`
     const edge: GraphEdge = { id, from, to, relation, weight, createdAt: new Date().toISOString() }
-    this.snapshot.edges = [edge, ...this.snapshot.edges.filter((item) => item.id !== id)]
+    this.state.edges = [edge, ...this.state.edges.filter((item) => item.id !== id)]
     this.persist()
     return edge
   }
 
   search(query: string, limit = 5): MemorySearchResult[] {
     const queryVector = embed(query)
-    return this.snapshot.vectors
+    return this.state.vectors
       .map((memory) => ({ ...memory, score: similarity(queryVector, memory.vector) }))
       .sort((left, right) => right.score - left.score)
       .slice(0, limit)
@@ -116,10 +116,14 @@ export class StudyMemoryDatabase {
 
   health(): MemoryHealth {
     return {
-      vectors: this.snapshot.vectors.length,
-      nodes: this.snapshot.nodes.length,
-      edges: this.snapshot.edges.length,
+      vectors: this.state.vectors.length,
+      nodes: this.state.nodes.length,
+      edges: this.state.edges.length,
     }
+  }
+
+  snapshot(): MemorySnapshot {
+    return structuredClone(this.state)
   }
 
   private read(): MemorySnapshot {
@@ -133,6 +137,6 @@ export class StudyMemoryDatabase {
   }
 
   private persist() {
-    this.storage?.setItem(STORAGE_KEY, JSON.stringify(this.snapshot))
+    this.storage?.setItem(STORAGE_KEY, JSON.stringify(this.state))
   }
 }

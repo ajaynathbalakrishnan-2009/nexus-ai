@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { adaptCounseling, createLearningTasks, decideInterruption, defaultPolicy, type AgentDecision, type AgentEvent, type LearningTask } from './lib/agent'
 import { mountGoogleButton, type VerifiedGoogleProfile } from './lib/googleAuth'
 import { StudyMemoryDatabase, type MemoryHealth } from './lib/memory'
+import { syncRemoteMemory } from './lib/remoteMemory'
 import './App.css'
 
 type EventRecord = {
@@ -119,6 +120,7 @@ function App() {
     memory.remember('college:profile', `${college || 'College'} ${effectiveDepartment} ${semester}`, { kind: 'academic-profile', department: effectiveDepartment, semester })
     memory.remember('habit:short-video', 'Short-form video is a recurring interruption around the forty-five minute focus mark', { kind: 'pattern', confidence: 0.92 })
     setMemoryHealth(memory.health())
+    void syncRemoteMemory(memory.snapshot()).catch(() => undefined)
   }, [college, effectiveDepartment, language, memory, semester, subject, topic, userName])
 
   useEffect(() => {
@@ -145,6 +147,7 @@ function App() {
     memory.connect('learner:alex', eventId, 'EXPERIENCED')
     memory.remember(eventId, `${event.title}. ${event.detail}`, { kind: 'event', tone: event.tone })
     setMemoryHealth(memory.health())
+    void syncRemoteMemory(memory.snapshot()).catch(() => undefined)
     setEvents((current) => [
       { ...event, id: Date.now(), time: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) },
       ...current,

@@ -31,6 +31,7 @@ jobs:
         env:
           VITE_GOOGLE_CLIENT_ID: ${{ vars.GOOGLE_CLIENT_ID }}
           VITE_AUTH_VERIFY_URL: ${{ vars.AUTH_VERIFY_URL }}
+          VITE_MEMORY_API_URL: ${{ vars.MEMORY_API_URL }}
         run: npm run build
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3

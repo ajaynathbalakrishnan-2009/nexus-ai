@@ -47,3 +47,7 @@ For GitHub Pages, add these repository variables under **Settings > Secrets and 
 - `AUTH_VERIFY_URL` — the public HTTPS URL of the deployed `server/` API ending in `/api/auth/google`
 
 The Pages workflow injects them at build time. The auth server must be deployed separately because GitHub Pages only hosts static files.
+
+## Vector and graph memory
+
+The browser keeps a local copy for offline use and synchronizes the same snapshot to the optional memory API. The API stores semantic memories in Qdrant and learner relationships in Neo4j. Configure `VITE_MEMORY_API_URL` in the web build and the `QDRANT_*` and `NEO4J_*` values in `server/.env`. The server creates the Qdrant collection automatically and uses `MemoryEntity` nodes plus `RELATES` edges in Neo4j.
