@@ -202,13 +202,19 @@ function App() {
     setSignInError('')
   }
 
+  const startGoogleSignIn = () => {
+    if (!googleButtonRef.current) return
+    setSignInError('')
+    void mountGoogleButton(googleButtonRef.current, handleGoogleSignIn, setSignInError)
+  }
+
   if (!signedIn) {
     return (
       <main className="signin-shell">
         <section className="signin-panel">
           <div className="brand signin-brand"><span className="brand-mark">NX</span><span>Nexus AI</span></div>
           <div className="signin-copy"><p className="eyebrow">PRIVATE STUDY COMPANION</p><h1>Protect your attention.</h1><p>Sign in to continue to your personal study space. Your profile and learning memory stay on this device in this MVP.</p></div>
-          <div className="signin-form"><button className="google-signin-button" type="button" onClick={() => { if (window.google?.accounts?.id) window.google.accounts.id.prompt(); else setSignInError('Google sign-in is not configured on this deployment yet.') }}><span className="google-g">G</span> Sign in with Google</button><div ref={googleButtonRef} className="google-button" aria-hidden="true" />{signInError && <p className="signin-error" role="alert">{signInError}</p>}</div>
+          <div className="signin-form"><button className="google-signin-button" type="button" onClick={startGoogleSignIn}><span className="google-g">G</span> Sign in with Google</button><div ref={googleButtonRef} className="google-button" aria-hidden="true" />{signInError && <p className="signin-error" role="alert">{signInError}</p>}</div>
           <p className="signin-privacy"><span className="status-dot" /> Google verifies your account · Device email must match · No password is stored</p>
         </section>
         <aside className="signin-aside"><span className="aside-mark">✦</span><p className="eyebrow">BUILT AROUND YOUR CONTEXT</p><h2>One place for your college, department, semester, subject, and topic.</h2><p>Nexus AI uses that context to create focused study tasks, understand interruptions, and keep distracting notifications out of the way.</p></aside>
