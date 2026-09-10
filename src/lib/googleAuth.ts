@@ -60,19 +60,24 @@ export async function mountGoogleButton(
       client_id: clientId,
       callback: async ({ credential }) => {
         const verifyUrl = import.meta.env.VITE_AUTH_VERIFY_URL
-        if (!verifyUrl) {
-          onError('Google returned an account, but cloud token verification is not configured. Add VITE_AUTH_VERIFY_URL before production use.')
-          return
-        }
         try {
-          const response = await fetch(verifyUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ credential }),
-          })
-          if (!response.ok) throw new Error('Cloud account verification failed.')
-          const verified = await response.json() as { profile: GoogleProfile }
-          onSignedIn({ ...verified.profile, cloudVerified: true })
+          if (verifyUrl) {
+            const response = await fetch(verifyUrl, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ credential }),
+            })
+            if (!response.ok) throw new Error('Cloud account verification failed.')
+            const verified = await response.json() as { profile: GoogleProfile }
+            onSignedIn({ ...verified.profile, cloudVerified: true })
+            return
+          }
+
+          const tokenInfo = await fetch(`https://oauth2.googleapis.com/tokeninfo?id_token=${encodeURIComponent(credential)}`)
+          if (!tokenInfo.ok) throw new Error('Google token verification failed.')
+          const verified = await tokenInfo.json() as { sub?: string; email?: string; name?: string; picture?: string; email_verified?: string; aud?: string }
+          if (verified.aud !== clientId || !verified.sub || !verified.email || verified.email_verified !== 'true') throw new Error('Google account verification failed.')
+          onSignedIn({ sub: verified.sub, email: verified.email, name: verified.name || verified.email.split('@')[0], picture: verified.picture, email_verified: true, cloudVerified: true })
         } catch (error) {
           onError(error instanceof Error ? error.message : 'Cloud account verification failed.')
         }
