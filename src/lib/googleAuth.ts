@@ -48,7 +48,7 @@ export async function mountGoogleButton(
 ) {
   const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
   if (!clientId) {
-    onError('Google sign-in is not configured yet. Add VITE_GOOGLE_CLIENT_ID to the deployment environment.')
+    onError('Google sign-in is temporarily unavailable. Configure the Google OAuth client in the deployment settings.')
     return
   }
   try {

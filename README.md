@@ -40,3 +40,10 @@ npm run dev
 ```
 
 Create the OAuth client in Google Cloud Console as a **Web application** and add `http://127.0.0.1:5173` to Authorized JavaScript origins. Do not put a client secret in the web app.
+
+For GitHub Pages, add these repository variables under **Settings > Secrets and variables > Actions > Variables**:
+
+- `GOOGLE_CLIENT_ID` — your Google OAuth Web Client ID
+- `AUTH_VERIFY_URL` — the public HTTPS URL of the deployed `server/` API ending in `/api/auth/google`
+
+The Pages workflow injects them at build time. The auth server must be deployed separately because GitHub Pages only hosts static files.
