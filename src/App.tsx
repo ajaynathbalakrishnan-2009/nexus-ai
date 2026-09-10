@@ -230,6 +230,12 @@ function App() {
     setSignInError('')
   }
 
+  const signOut = () => {
+    localStorage.removeItem('nexus-signed-in')
+    localStorage.removeItem('nexus-auth-mode')
+    setSignedIn(false)
+  }
+
   if (!signedIn) {
     return (
       <main className="signin-shell">
@@ -248,7 +254,7 @@ function App() {
     <main className="app-shell">
       <header className="topbar">
         <div className="brand"><span className="brand-mark">NX</span><span>Nexus AI</span></div>
-        <div className="topbar-actions"><span className="privacy-chip"><span className="status-dot" /> Local-first</span><button className="icon-button" aria-label="Open settings">⚙</button><div className="avatar" aria-label={`Signed in as ${userName}`} title={userName}>{userInitials}</div></div>
+        <div className="topbar-actions"><span className="privacy-chip"><span className="status-dot" /> Local-first</span><button className="icon-button" aria-label="Open settings">⚙</button><button className="avatar" aria-label={`Sign out ${userName}`} title={`Sign out ${userName}`} onClick={signOut}>{userInitials}</button></div>
       </header>
 
       <section className="welcome-row">

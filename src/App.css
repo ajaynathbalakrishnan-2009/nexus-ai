@@ -17,7 +17,7 @@ button { cursor: pointer; }
 .privacy-chip { gap: 7px; padding: 8px 11px; border: 1px solid var(--line); border-radius: 99px; color: var(--muted); font-size: 12px; font-weight: 700; }
 .status-dot, .mini-dot { width: 7px; height: 7px; border-radius: 50%; background: #36ad71; display: inline-block; box-shadow: 0 0 0 4px #dff4e7; }
 .icon-button, .close-button { border: 0; background: transparent; color: var(--muted); font-size: 19px; }
-.avatar { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #f1d9c1; color: #8a4e2c; font-size: 11px; font-weight: 800; }
+.avatar { display: grid; place-items: center; width: 34px; height: 34px; padding: 0; border: 0; border-radius: 50%; background: #f1d9c1; color: #8a4e2c; font-size: 11px; font-weight: 800; }
 .welcome-row { display: flex; justify-content: space-between; align-items: end; padding: 54px 0 34px; }
 .eyebrow { margin: 0 0 9px; color: var(--muted); font: 500 10px/1 'DM Mono', monospace; letter-spacing: .13em; }
 h1, h2, p { margin-top: 0; }
