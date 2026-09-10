@@ -1,0 +1,12 @@
+{
+  "manifest_version": 3,
+  "name": "Nexus AI Focus Guard",
+  "version": "1.0.0",
+  "description": "Blocks configured social media during Nexus AI quiet hours and focus locks.",
+  "permissions": ["storage", "declarativeNetRequest", "alarms", "tabs"],
+  "host_permissions": ["*://*.youtube.com/*", "*://*.instagram.com/*", "*://*.facebook.com/*", "*://*.tiktok.com/*", "*://*.x.com/*", "*://*.twitter.com/*"],
+  "background": { "service_worker": "background.js", "type": "module" },
+  "action": { "default_title": "Nexus AI Focus Guard", "default_popup": "popup.html" },
+  "declarative_net_request": { "rule_resources": [{ "id": "social_rules", "enabled": true, "path": "rules.json" }] },
+  "web_accessible_resources": [{ "resources": ["blocked.html"], "matches": ["<all_urls>"] }]
+}
